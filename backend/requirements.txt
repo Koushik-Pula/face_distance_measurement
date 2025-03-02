@@ -1,0 +1,7 @@
+# Python 3.8
+numpy==1.24.1
+fastapi==0.95.1
+uvicorn==0.22.0
+opencv-python==4.7.0.72
+websockets==10.3
+aiofiles==0.8.0
