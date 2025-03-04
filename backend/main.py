@@ -19,12 +19,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 FOCAL_LENGTH = 540  
 KNOWN_WIDTH = 0.15  
 
+# Load Face SSD model with ShuffleNetV2 backbone
 modelFile = "res10_300x300_ssd_iter_140000.caffemodel"
-configFile = "deploy.prototxt"
+configFile = "deploy.prototxt.txt"
 
 if not os.path.exists(modelFile) or not os.path.exists(configFile):
     raise FileNotFoundError("Model files not found! Ensure they exist in the same directory.")
@@ -35,7 +35,7 @@ def detect_face_and_distance(frame):
     try:
         h, w = frame.shape[:2]
 
-        blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300), (104.0, 177.0, 123.0))
+        blob = cv2.dnn.blobFromImage(frame, 1.0, (640, 640), (104.0, 177.0, 123.0))
         net.setInput(blob)
         detections = net.forward()
 
@@ -89,7 +89,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 _, buffer = cv2.imencode('.jpg', processed_frame)
                 jpg_as_text = base64.b64encode(buffer).decode('utf-8')
                 
-
                 await websocket.send_json({
                     "image": jpg_as_text,
                     "distance": float(distance) if distance is not None else -1,
